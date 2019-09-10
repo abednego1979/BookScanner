@@ -124,6 +124,8 @@ class Controler():
                     config.setSelRect([rect[0], rect[1]+step, rect[2], rect[3]+step])
                 else:
                     config.setSelRect([rect[0], rect[1], rect[2], rect[3]+step])
+            print ("Select Rect:", config.getSelRect())
+            
         elif ProcType == 'blackwhite':
             if key == pygame.K_LEFT:
                 #减少黑白门限阈值

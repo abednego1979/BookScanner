@@ -3,7 +3,7 @@
 #V0.01
 
 import config
-
+import os
 import sys      
 import wx
 import cv2

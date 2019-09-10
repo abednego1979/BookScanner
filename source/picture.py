@@ -128,7 +128,7 @@ class Picture():
             assert self.getCurTempImgType() != 'zoom'
         
         img=self.getCurTempImg()
-        img = self._zoom(scale)
+        img = self._zoom(img, scale)
         
         config.setZoomScale(scale)
         
