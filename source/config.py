@@ -28,6 +28,11 @@ class global_var:
     zoom_scale = 1.0
     zoom_scale_step = 0.01      #0.01/0.1
     
+    #由于在显示时缩小图像时网格线和选择框的线条所在位置可能被省略，所以需要在显示图像时在
+    #缩放以后再画网格线，这样就有一个问题是选择框记录的区域是针对缩放后的图片的，所以要记
+    #录下在显示前到底缩放了多少比例，以便于后期处理时反向缩放响应的比例
+    showScale=1.0
+    
     #设置灰度标识
     gray = False
     
@@ -119,6 +124,11 @@ def getZoomScaleStep():
     return global_var.zoom_scale_step
 def setZoomScaleStep(step):
     global_var.zoom_scale_step = step
+    
+def getShowScale():
+    return global_var.showScale
+def setShowScale(showScale):
+    global_var.showScale = showScale
     
 def getGrayFlag():
     return global_var.gray

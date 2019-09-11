@@ -8,8 +8,8 @@ import pygame
 class Settings():
     def __init__(self):
         #屏幕区域
-        DisplayScale_W=1.0
-        DisplayScale_H=1.0
+        DisplayScale_W=1.6
+        DisplayScale_H=1.2
         
         self.SCREEN_WIDTH = int(1024*DisplayScale_W)
         self.SCREEN_HEIGHT = int(768*DisplayScale_H)

@@ -260,11 +260,7 @@ class Picture():
     def show(self, showArea):
         #显示图像
         
-        #画网格线
-        img=self.grid(self.getCurTempImg())
-        
-        #画选择线
-        img=self.select(img)
+        img=self.getCurTempImg()
         
         #将图像转化为适合showArea区域
         (h, w) = img.shape[:2]
@@ -272,12 +268,23 @@ class Picture():
         img = cv2.resize(img, (0, 0), fx=Scale, fy=Scale, interpolation=cv2.INTER_NEAREST)
         (h, w) = img.shape[:2]
         
-        #构造一个showArea大小的黑色背景图片,并转化为BGR三通道
-        blackBG = np.ones((showArea.height, showArea.width, 3),dtype=np.uint8)
+        config.setShowScale(Scale)
         
         #如果是灰度或者黑白图，只有一个通道，为了嵌入背景，需要转化为三通道图像
         if len(img.shape)==2:
             img = cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)
+        
+        #缩放会导致某些像素丢失，所以在缩放之前画网格线和选择框可能会被擦除，所以要在缩放之后再画网格线和选择框
+        #画网格线
+        img=self.grid(img)
+    
+        #画选择线
+        img=self.select(img)
+        
+        #构造一个showArea大小的黑色背景图片,并转化为BGR三通道
+        blackBG = np.ones((showArea.height, showArea.width, 3),dtype=np.uint8)
+        
+
 
         #将图像嵌入黑色背景图片
         blackBG[showArea.height//2-h//2:showArea.height//2-h//2+h, showArea.width//2-w//2:showArea.width//2-w//2+w, :] = img
