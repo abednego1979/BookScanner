@@ -3,7 +3,8 @@
 #V0.01
 
 import config
-
+import os
+import datetime
 import cv2
 import pygame
 import numpy as np
@@ -321,8 +322,8 @@ class Picture():
         
         #遍历图片路径
         objlist = os.listdir(PicFilePath)
-        for i in range(len(list)):
-            path = os.path.join(PicFilePath,list[i])
+        for i in range(len(objlist)):
+            path = os.path.join(PicFilePath,objlist[i])
             
             if os.path.isfile(path) and path.endswith(PicFileExt):
                 #这是一个与操作示例图片类型一样的图片
@@ -335,6 +336,13 @@ class Picture():
     
     
     def DoBatch(self, picPath, actionArray):
+        (filepath,tempfilename) = os.path.split(picPath)
+        (filename,extension) = os.path.splitext(tempfilename)
+        
+        if filename.startswith("_"):
+            #不要处理此前的处理结果。
+            return
+        
         #读取图片文件
         img = cv2.imread(picPath, cv2.IMREAD_UNCHANGED)
         
@@ -352,13 +360,15 @@ class Picture():
                 img = self._gray(img)
             elif action == 'blackwhite':
                 img = self._blackwhite(img, config.getBlackwhiteThresh())
-            elif action == 'select':
-                img = self._select(image, config.getSelRect())
+                
+        #根据选择框，提取被使用者选择的部分图像，注意由于过大的图像在显示的时候被缩放了，会导致选择框消隐，
+        #所以显示图像是先缩放后绘制选择框的。所以选择框的比例要先缩放再使用
+        select_rect = config.getSelRect()
+        showScale=config.getShowScale()
+        select_rect = [int(item/showScale) for item in select_rect]
+        img = self._select(img, select_rect)
         
-        #将img另存
-        (filepath,tempfilename) = os.path.split(picPath)
-        (filename,extension) = os.path.splitext(tempfilename)
-        
+        #将img另存        
         filename='_'+str(datetime.datetime.now()).replace(":","")+'_'+filename
         newFullPath=os.path.join(filepath, filename+extension)
         
